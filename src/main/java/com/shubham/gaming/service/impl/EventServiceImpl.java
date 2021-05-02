@@ -6,6 +6,7 @@ import com.shubham.gaming.dto.response.EventWinnerDto;
 import com.shubham.gaming.dto.response.GetUserTicketsResponseDto;
 import com.shubham.gaming.dto.response.GetWinnersResponseDto;
 import com.shubham.gaming.entity.LuckyDrawEvent;
+import com.shubham.gaming.entity.RaffleTicket;
 import com.shubham.gaming.enums.EventStatus;
 import com.shubham.gaming.repository.LuckyDrawEventRepo;
 import com.shubham.gaming.repository.RaffleTicketRepo;
@@ -73,8 +74,14 @@ public class EventServiceImpl implements EventService {
       return;
     }
 
+
     LuckyDrawEvent todayEvent = oTodayEvent.get();
 
+    RaffleTicket winnerTicket = raffleTicketRepo.getWinnerTicket(todayEvent.getId());
+    todayEvent.setWinner(winnerTicket.getUserId());
+    todayEvent.setStatus(EventStatus.COMPLETED);
+    //announce winner
+    luckyDrawEventRepo.save(todayEvent);
   }
 
 }
