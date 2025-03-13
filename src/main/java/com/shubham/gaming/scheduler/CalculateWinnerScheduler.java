@@ -1,19 +1,21 @@
 package com.shubham.gaming.scheduler;
 
-import com.shubham.gaming.service.EventService;
+import com.shubham.gaming.service.ThirdPartyApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 @Component
 public class CalculateWinnerScheduler {
 
   @Autowired
-  private EventService eventService;
+  private ThirdPartyApiService thirdPartyApiService;
 
-  //Event runs every morning 8 AM
-  @Scheduled(cron = "0 0 8 * * *")
-  public void runEventScheduler(){
-    eventService.calculateWinner();
+  @Scheduled(cron = "0/10 * * ? * *")
+  public void runEventScheduler() throws IOException, GeneralSecurityException {
+    thirdPartyApiService.fetchAndUpdateSheet();
   }
 }

@@ -1,37 +1,25 @@
 package com.shubham.gaming.controller;
 
-import com.shubham.gaming.dto.request.CreateEventDto;
-import com.shubham.gaming.dto.response.EventResponseDto;
-import com.shubham.gaming.dto.response.GetWinnersResponseDto;
-import com.shubham.gaming.service.EventService;
+import com.shubham.gaming.service.ThirdPartyApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 @RestController
 public class EventController {
 
   @Autowired
-  private EventService eventService;
+  private ThirdPartyApiService thirdPartyApiService;
 
-  @PostMapping(value = "/createEvent")
-  private ResponseEntity<EventResponseDto> createEvent(@Valid @RequestBody CreateEventDto createEventDto){
-    return new ResponseEntity<>(eventService.createEvent(createEventDto), HttpStatus.CREATED);
+  @GetMapping(value = "/createEvent")
+  private ResponseEntity<String> createEvent() throws IOException, GeneralSecurityException {
+    thirdPartyApiService.fetchAndUpdateSheet();
+    return new ResponseEntity<>("Hello", HttpStatus.CREATED);
   }
 
-  @GetMapping(value = "/getNextEvent")
-  private ResponseEntity<EventResponseDto> getNextEvent(){
-    return new ResponseEntity<>(eventService.getNextEvent(), HttpStatus.OK);
-  }
-
-  @GetMapping(value = "/getWinners")
-  private ResponseEntity<GetWinnersResponseDto> getWinners(){
-    return new ResponseEntity<>(eventService.getWinners(), HttpStatus.OK);
-  }
 }
